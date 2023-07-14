@@ -154,7 +154,7 @@ while [[ $# -gt 0 ]]; do
     shift
     LANGUAGE=$1
     ;;
-  --newscaster)
+  -n | --newscaster)
     NEWSCASTER_STYLE=true
     ;;
   *)
