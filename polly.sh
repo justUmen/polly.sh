@@ -1,6 +1,10 @@
 #!/bin/bash
 # Array of valid languages and their corresponding voices
-VALID_LANGUAGES=("ar-AE" "nl-BE" "ca-ES" "yue-CN" "cmn-CN" "da-DK" "nl-NL" "en-AU" "en-GB" "en-IN" "en-IE" "en-NZ" "en-ZA" "en-US" "fi-FI" "fr-CA" "fr-FR" "de-DE" "de-AT" "hi-IN" "it-IT" "ja-JP" "ko-KR" "nb-NO" "pl-PL" "pt-BR" "pt-PT" "es-ES" "es-MX" "es-US" "sv-SE")
+VALID_LANGUAGES=(
+  "ar-AE" "nl-BE" "ca-ES" "yue-CN" "cmn-CN" "da-DK" "nl-NL" "en-AU" "en-GB" "en-IN" "en-IE" "en-NZ" "en-ZA" "en-US"
+  "fi-FI" "fr-CA" "fr-FR" "de-DE" "de-AT" "hi-IN" "it-IT" "ja-JP" "ko-KR" "nb-NO" "pl-PL" "pt-BR" "pt-PT" "es-ES" "es-MX" "es-US" "sv-SE"
+  "ar" "ae" "nl" "ca" "yue" "cmn" "da" "en2" "en3" "au" "gb" "nz" "sa" "za" "us" "fi" "fr" "de" "at" "hi" "it" "jp" "ko" "nb" "pl" "br" "pt" "es" "es2" "mx" "sv" "se"
+)
 
 declare -A LANGUAGE_VOICES
 
@@ -45,6 +49,54 @@ function display_help() {
   done
 }
 
+# Function to convert the language code to the appropriate format
+function convert_language_code() {
+  local language=$1
+  case $language in
+  #Manual changes
+  "en") echo "en-GB" ;; # English default is British (Amy default voice)
+  #Language list
+  "ar") echo "ar-AE" ;;   # Arabic (Gulf)
+  "ae") echo "ar-AE" ;;   # Arabic (Gulf)
+  "nl") echo "nl-BE" ;;   # Belgian Dutch (Flemish)
+  "cat") echo "ca-ES" ;;  # Catalan
+  "yue") echo "yue-CN" ;; # Chinese (Cantonese)
+  "cmn") echo "cmn-CN" ;; # Chinese (Mandarin)
+  "da") echo "da-DK" ;;   # Danish
+  "nl") echo "nl-NL" ;;   # Dutch
+  "en2") echo "en-IE" ;;  # English (Irish)
+  "en3") echo "en-IN" ;;  # English (Indian)
+  "au") echo "en-AU" ;;   # English (Australian)
+  "gb") echo "en-GB" ;;   # English (British)
+  "nz") echo "en-NZ" ;;   # English (New Zealand)
+  "sa") echo "en-ZA" ;;   # English (South African)
+  "za") echo "en-ZA" ;;   # English (South African)
+  "us") echo "en-US" ;;   # English (US)
+  "fi") echo "fi-FI" ;;   # Finnish
+  "ca") echo "fr-CA" ;;   # French (Canadian)
+  "fr") echo "fr-FR" ;;   # French
+  "de") echo "de-DE" ;;   # German
+  "at") echo "de-AT" ;;   # German (Austrian)
+  "in") echo "hi-IN" ;;   # Hindi
+  "it") echo "it-IT" ;;   # Italian
+  "ja") echo "ja-JP" ;;   # Japanese
+  "jp") echo "ja-JP" ;;   # Japanese
+  "ko") echo "ko-KR" ;;   # Korean
+  "kr") echo "ko-KR" ;;   # Korean
+  "nb") echo "nb-NO" ;;   # Norwegian
+  "no") echo "nb-NO" ;;   # Norwegian
+  "pl") echo "pl-PL" ;;   # Polish
+  "pt") echo "pt-PT" ;;   # Portuguese (European)
+  "br") echo "pt-BR" ;;   # Portuguese (Brazilian)
+  "es") echo "es-ES" ;;   # Spanish (European)
+  "es2") echo "es-US" ;;  # Spanish (US)
+  "mx") echo "es-MX" ;;   # Spanish (Mexican)
+  "sv") echo "sv-SE" ;;   # Swedish
+  "se") echo "sv-SE" ;;   # Swedish
+  *) echo "$language" ;;
+  esac
+}
+
 # Function to check if the provided voice is valid for the given language
 function is_valid_voice() {
   local voice=$1
@@ -76,20 +128,20 @@ fi
 
 while [[ $# -gt 0 ]]; do
   case $1 in
-    -v|--voice)
-      shift
-      VOICE=$1
-      ;;
-    -l|--language)
-      shift
-      LANGUAGE=$1
-      ;;
-    --newscaster)
-      NEWSCASTER_STYLE=true
-      ;;
-    *)
-      TEXT+="$1 "
-      ;;
+  -v | --voice)
+    shift
+    VOICE=$1
+    ;;
+  -l | --language)
+    shift
+    LANGUAGE=$1
+    ;;
+  --newscaster)
+    NEWSCASTER_STYLE=true
+    ;;
+  *)
+    TEXT+="$1 "
+    ;;
   esac
   shift
 done
@@ -106,6 +158,10 @@ NAME=$(echo "$TEXT" | sed 's/ /_/g')
 if [ ${#NAME} -gt 100 ]; then
   NAME=${NAME:0:100}
 fi
+
+# Convert the language code to the appropriate format
+LANGUAGE_GIVEN=$LANGUAGE
+LANGUAGE=$(convert_language_code "$LANGUAGE")
 
 # Check if the provided language is valid
 if ! [[ " ${VALID_LANGUAGES[@]} " =~ " $LANGUAGE " ]]; then
@@ -134,6 +190,7 @@ else
 fi
 
 # Display for debugging
+echo "_ LANGUAGE_GIVEN = $LANGUAGE_GIVEN _"
 echo "_ LANGUAGE = $LANGUAGE _"
 echo "_ VOICE = $VOICE _"
 echo "_ TEXT = $TEXT _"
@@ -151,16 +208,16 @@ echo
 if [ ! -f "$MP3_PATH" ]; then
   aws polly synthesize-speech \
     --output-format mp3 \
-	--text-type ssml \
+    --text-type ssml \
     --region us-east-1 \
     --engine neural \
     --voice-id "$VOICE" \
     --language-code "$LANGUAGE" \
     --text "$TEXT_SSML" \
-    "$MP3_PATH" > /dev/null
-	echo "Audio file was created (\"$MP3_PATH\")"
+    "$MP3_PATH" >/dev/null
+  echo "Audio file was created (\"$MP3_PATH\")"
 else
-	echo "Audio file already exist (\"$MP3_PATH\")"
+  echo "Audio file already exist (\"$MP3_PATH\")"
 fi
 echo
 
