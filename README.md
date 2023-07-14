@@ -41,7 +41,7 @@ Default region : us-east-1 (Not all regions have polly)
     Language: fr-CA, Voices: Gabrielle Liam
     Language: fr-FR, Voices: Lea Remi
     Language: cmn-CN, Voices: Zhiyu
-    Language: de-DE, Voices: Vicki DanielPE/9nqF/fXH54CJpH36zp4U+3kz4qh8T1ypXfibY
+    Language: de-DE, Voices: Vicki Daniel
     Language: en-IN, Voices: Kajal
     Language: en-US, Voices: Joanna Ivy Kendra Kimberly Salli Joey Justin Kevin Matthew Ruth Stephen
     Language: en-IE, Voices: Niamh
