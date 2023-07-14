@@ -64,8 +64,8 @@ function is_valid_voice() {
 TEXT=""
 VOICE="" #default set later depending on language
 # LANGUAGE="en-US" #default to american (Joanna)
-LANGUAGE="fr-FR" #default to french (Lea)
-# LANGUAGE="en-GB" #default to british (Amy)
+# LANGUAGE="fr-FR" #default to french (Lea)
+LANGUAGE="en-GB" #default to british (Amy)
 NEWSCASTER_STYLE=false
 
 # Check if no arguments are provided or if the --help option is used
