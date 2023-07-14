@@ -3,7 +3,8 @@
 VALID_LANGUAGES=(
   "ar-AE" "nl-BE" "ca-ES" "yue-CN" "cmn-CN" "da-DK" "nl-NL" "en-AU" "en-GB" "en-IN" "en-IE" "en-NZ" "en-ZA" "en-US"
   "fi-FI" "fr-CA" "fr-FR" "de-DE" "de-AT" "hi-IN" "it-IT" "ja-JP" "ko-KR" "nb-NO" "pl-PL" "pt-BR" "pt-PT" "es-ES" "es-MX" "es-US" "sv-SE"
-  "ar" "ae" "nl" "ca" "yue" "cmn" "da" "en2" "en3" "au" "gb" "nz" "sa" "za" "us" "fi" "fr" "de" "at" "hi" "it" "jp" "ko" "nb" "pl" "br" "pt" "es" "es2" "mx" "sv" "se"
+  "ar" "ae" "nl" "ca" "cat" "yue" "cmn" "da" "au" "gb" "nz" "sa" "za" "us" "fi" "fr" "de" "at" "hi" "it" "jp" "ko" "nb" "pl" "br" "pt" "es" "es2" "mx" "sv" "se" 
+  "ie" "ir" "en2" "en3" "en4" "en5" "en6" "de2" "fr2" "pt2"
 )
 
 declare -A LANGUAGE_VOICES
@@ -47,6 +48,9 @@ function display_help() {
     voices="${LANGUAGE_VOICES[$language]}"
     echo "Language: $language, Voices: $voices"
   done
+  echo ""
+  echo "Abrev : English : en us au gb nz sa za ie ir en2 en3 en4 en5 en6"
+  echo "etc..."
 }
 
 # Function to convert the language code to the appropriate format
@@ -55,7 +59,38 @@ function convert_language_code() {
   case $language in
   #Manual changes
   "en") echo "en-GB" ;; # English default is British (Amy default voice)
-  #Language list
+  # English : au gb nz sa za us ie ir en2 en3 en4 en5 en6
+  "en3") echo "en-IN" ;;  # English (Indian)
+  "au") echo "en-AU" ;;   # English (Australian)
+  "en4") echo "en-AU" ;;   # English (Australian)
+  "gb") echo "en-GB" ;;   # English (British)
+  "nz") echo "en-NZ" ;;   # English (New Zealand)
+  "en5") echo "en-NZ" ;;   # English (New Zealand)
+  "sa") echo "en-ZA" ;;   # English (South African)
+  "za") echo "en-ZA" ;;   # English (South African)
+  "en5") echo "en-ZA" ;;   # English (South African)
+  "us") echo "en-US" ;;   # English (US)
+  "en2") echo "en-US" ;;   # English (US)
+  "ie") echo "en-IE" ;;  # English (Irish)
+  "ir") echo "en-IE" ;;  # English (Irish)
+  "en6") echo "en-IE" ;;  # English (Irish)
+  # French
+  "fr") echo "fr-FR" ;;   # French
+  "fr2") echo "fr-CA" ;;   # French (Canadian)
+  "ca") echo "fr-CA" ;;   # French (Canadian)
+  # Spanish  
+  "es") echo "es-ES" ;;   # Spanish (European)
+  "es2") echo "es-US" ;;  # Spanish (US)
+  "mx") echo "es-MX" ;;   # Spanish (Mexican)
+  # Portuguese
+  "pt") echo "pt-PT" ;;   # Portuguese (European)
+  "pt2") echo "pt-BR" ;;   # Portuguese (Brazilian)
+  "br") echo "pt-BR" ;;   # Portuguese (Brazilian)
+  # German
+  "de") echo "de-DE" ;;   # German
+  "de2") echo "de-AT" ;;   # German (Austrian)
+  "at") echo "de-AT" ;;   # German (Austrian)
+  # Other
   "ar") echo "ar-AE" ;;   # Arabic (Gulf)
   "ae") echo "ar-AE" ;;   # Arabic (Gulf)
   "nl") echo "nl-BE" ;;   # Belgian Dutch (Flemish)
@@ -64,19 +99,7 @@ function convert_language_code() {
   "cmn") echo "cmn-CN" ;; # Chinese (Mandarin)
   "da") echo "da-DK" ;;   # Danish
   "nl") echo "nl-NL" ;;   # Dutch
-  "en2") echo "en-IE" ;;  # English (Irish)
-  "en3") echo "en-IN" ;;  # English (Indian)
-  "au") echo "en-AU" ;;   # English (Australian)
-  "gb") echo "en-GB" ;;   # English (British)
-  "nz") echo "en-NZ" ;;   # English (New Zealand)
-  "sa") echo "en-ZA" ;;   # English (South African)
-  "za") echo "en-ZA" ;;   # English (South African)
-  "us") echo "en-US" ;;   # English (US)
   "fi") echo "fi-FI" ;;   # Finnish
-  "ca") echo "fr-CA" ;;   # French (Canadian)
-  "fr") echo "fr-FR" ;;   # French
-  "de") echo "de-DE" ;;   # German
-  "at") echo "de-AT" ;;   # German (Austrian)
   "in") echo "hi-IN" ;;   # Hindi
   "it") echo "it-IT" ;;   # Italian
   "ja") echo "ja-JP" ;;   # Japanese
@@ -86,11 +109,6 @@ function convert_language_code() {
   "nb") echo "nb-NO" ;;   # Norwegian
   "no") echo "nb-NO" ;;   # Norwegian
   "pl") echo "pl-PL" ;;   # Polish
-  "pt") echo "pt-PT" ;;   # Portuguese (European)
-  "br") echo "pt-BR" ;;   # Portuguese (Brazilian)
-  "es") echo "es-ES" ;;   # Spanish (European)
-  "es2") echo "es-US" ;;  # Spanish (US)
-  "mx") echo "es-MX" ;;   # Spanish (Mexican)
   "sv") echo "sv-SE" ;;   # Swedish
   "se") echo "sv-SE" ;;   # Swedish
   *) echo "$language" ;;
@@ -174,12 +192,6 @@ if [[ -z "$VOICE" ]]; then
   VOICE=$(echo "${LANGUAGE_VOICES[$LANGUAGE]}" | awk '{print $1}')
 fi
 
-# Check if the provided voice is valid for the given language
-if ! is_valid_voice "$VOICE" "$LANGUAGE"; then
-  echo "Invalid voice for the selected language. Valid voices for $LANGUAGE are: ${LANGUAGE_VOICES[$LANGUAGE]}"
-  exit 1
-fi
-
 # Add newscaster style if enabled and voice is valid
 if $NEWSCASTER_STYLE && [[ $VOICE == "Amy" || $VOICE == "Joanna" || $VOICE == "Lupe" || $VOICE == "Matthew" ]]; then
   MP3_PATH="$HOME/Audio/polly/$LANGUAGE/$VOICE/Newscaster/$NAME.mp3"
@@ -199,6 +211,12 @@ echo "_ NAME = $NAME _"
 echo "_ MP3_PATH = $MP3_PATH _"
 FOLDER_PATH=$(dirname "$MP3_PATH")
 echo "_ FOLDER_PATH = $FOLDER_PATH _"
+
+# Check if the provided voice is valid for the given language
+if ! is_valid_voice "$VOICE" "$LANGUAGE"; then
+  echo "Invalid voice for the selected language. Valid voices for $LANGUAGE are: ${LANGUAGE_VOICES[$LANGUAGE]}"
+  exit 1
+fi
 
 # Create the directory if it doesn't exist
 mkdir -p "$FOLDER_PATH" 2>/dev/null
