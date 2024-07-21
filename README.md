@@ -11,7 +11,7 @@ sudo ./aws/install
 
 ## 2 - CONFIGURE (with IAM)
 
-aws configure
+`aws configure`
 
 User : your_username  
 Access key ID : ...  
