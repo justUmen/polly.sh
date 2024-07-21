@@ -3,7 +3,11 @@
 Need an aws account with polly enabled.
 
 ## 1 - INSTALL AWS CLI
-sudo apt-get install awscli
+```
+curl "https://awscli.amazonaws.com/awscli-exe-linux-x86_64.zip" -o "awscliv2.zip"
+unzip awscliv2.zip
+sudo ./aws/install
+```
 
 ## 2 - CONFIGURE (with IAM)
 
