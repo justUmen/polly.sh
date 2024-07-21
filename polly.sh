@@ -7,33 +7,39 @@ VALID_LANGUAGES=(
   "ie" "ir" "en2" "en3" "en4" "en5" "en6" "de2" "fr2" "pt2"
 )
 
-declare -A LANGUAGE_VOICES
-
-# Assign voices for each language
-LANGUAGE_VOICES["ar-AE"]="Hala"
-LANGUAGE_VOICES["nl-BE"]="Lisa"
-LANGUAGE_VOICES["ca-ES"]="Arlet"
-LANGUAGE_VOICES["yue-CN"]="Hiujin"
-LANGUAGE_VOICES["cmn-CN"]="Zhiyu"
-LANGUAGE_VOICES["da-DK"]="Sofie"
-LANGUAGE_VOICES["nl-NL"]="Laura"
-LANGUAGE_VOICES["en-AU"]="Olivia"
-LANGUAGE_VOICES["en-GB"]="Amy Emma Brian Arthur"
-LANGUAGE_VOICES["en-IN"]="Kajal"
-LANGUAGE_VOICES["en-IE"]="Niamh"
-LANGUAGE_VOICES["en-NZ"]="Aria"
-LANGUAGE_VOICES["en-ZA"]="Ayanda"
-LANGUAGE_VOICES["en-US"]="Joanna Ivy Kendra Kimberly Salli Joey Justin Kevin Matthew Ruth Stephen"
-LANGUAGE_VOICES["fi-FI"]="Suvi"
-LANGUAGE_VOICES["fr-CA"]="Gabrielle Liam"
-LANGUAGE_VOICES["fr-FR"]="Lea Remi"
-LANGUAGE_VOICES["de-DE"]="Vicki Daniel"
-LANGUAGE_VOICES["pt-BR"]="Camila Vitoria Thiago"
-LANGUAGE_VOICES["pt-PT"]="Ines"
-LANGUAGE_VOICES["es-ES"]="Lucia Sergio"
-LANGUAGE_VOICES["es-MX"]="Mia Andres"
-LANGUAGE_VOICES["es-US"]="Lupe Pedro"
-LANGUAGE_VOICES["sv-SE"]="Elin"
+declare -A LANGUAGE_VOICES=(
+    ["ar-AE"]="Hala Zayd"
+    ["ca-ES"]="Arlet"
+    ["cmn-CN"]="Zhiyu"
+    ["da-DK"]="Sofie"
+    ["de-AT"]="Hannah"
+    ["de-DE"]="Vicki Daniel"
+    ["en-AU"]="Olivia"
+    ["en-GB"]="Amy Emma Brian Arthur"
+    ["en-IE"]="Niamh"
+    ["en-IN"]="Kajal"
+    ["en-NZ"]="Aria"
+    ["en-US"]="Danielle Gregory Kevin Salli Matthew Kimberly Kendra Justin Joey Joanna Ivy Ruth Stephen"
+    ["en-ZA"]="Ayanda"
+    ["es-ES"]="Lucia Sergio"
+    ["es-MX"]="Mia Andres"
+    ["es-US"]="Lupe Pedro"
+    ["fi-FI"]="Suvi"
+    ["fr-BE"]="Isabelle"
+    ["fr-CA"]="Gabrielle Liam"
+    ["fr-FR"]="Lea Remi"
+    ["it-IT"]="Bianca Adriano"
+    ["ja-JP"]="Kazuha Tomoko Takumi"
+    ["ko-KR"]="Seoyeon"
+    ["nl-BE"]="Lisa"
+    ["nb-NO"]="Ida"
+    ["pl-PL"]="Ola"
+    ["pt-BR"]="Vitoria Camila Thiago"
+    ["pt-PT"]="Ines"
+    ["sv-SE"]="Elin"
+    ["tr-TR"]="Burcu"
+    ["yue-CN"]="Hiujin"
+)
 
 # Function to display valid options and values
 function display_help() {
@@ -112,6 +118,7 @@ function convert_language_code() {
   "pl") echo "pl-PL" ;;   # Polish
   "sv") echo "sv-SE" ;;   # Swedish
   "se") echo "sv-SE" ;;   # Swedish
+  "tr") echo "tr-TR" ;;  # Turkish
   *) echo "$language" ;;
   esac
 }
@@ -242,7 +249,7 @@ if [ ! -f "$MP3_PATH" ]; then
 else
   echo "Audio file already exist (\"$MP3_PATH\")"
 fi
-exit
+# exit
 echo
 
 function mute_sinks() {
@@ -257,8 +264,9 @@ function unmute_sinks() {
   done
 }
 
+echo "MUTE = $MUTE"
 if $MUTE; then
-  ln -s "$MP3_PATH" "/tmp/last_polly.mp3"
+  ln -s -f "$MP3_PATH" "/tmp/last_polly.mp3"
   exit 0
 fi
 mute_sinks
