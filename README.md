@@ -20,13 +20,15 @@ Default region : us-east-1 (Not all regions have polly)
 
 ## USAGE
 
-`polly`
+`polly "hello world"`
 
-### in zshrc (use your own path of course)
+### In zshrc or bashrc... (use your own path of course)
 
-    function polly(){
-    	/home/umen/SyNc_linux/Scripts/Web/aws_polly/polly.sh "$@"
-    }
+```
+function polly(){
+	/home/umen/SyNc_linux/Scripts/Web/aws_polly/polly.sh "$@"
+}
+```
 
 ### Options :
 
