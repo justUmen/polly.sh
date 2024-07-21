@@ -181,8 +181,8 @@ TEXT=${TEXT%% }
 TEXT=${TEXT%% }
 TEXT=${TEXT%% }
 
-# Replace spaces with underscores in the name
-NAME=$(echo "$TEXT" | sed 's/ /_/g')
+# Replace special characters with underscores in the name
+NAME=$(echo "$TEXT" | sed 's/[^a-zA-Z0-9]/_/g')
 
 # Cut if NAME is too long
 if [ ${#NAME} -gt 100 ]; then
