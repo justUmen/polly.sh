@@ -40,6 +40,7 @@ function display_help() {
   echo "Valid options:"
   echo "-l, --language [LANGUAGE_CODE]: Set the language code. (default : en-US)"
   echo "-v, --voice [VOICE_ID]: Set the voice ID. (default : Joanna)"
+  echo "-m, --mute: Do not play audio, only create the audio file"
   echo "--newscaster: Enable newscaster style for eligible voices."
   echo "--help: Display this help message."
   echo ""
@@ -137,6 +138,7 @@ VOICE="" #default set later depending on language
 # LANGUAGE="fr-FR" #default to french (Lea)
 LANGUAGE="en-GB" #default to british (Amy)
 NEWSCASTER_STYLE=false
+MUTE=false
 
 # Check if no arguments are provided or if the --help option is used
 if [[ $# -eq 0 ]] || [[ "$1" == "--help" ]]; then
@@ -156,6 +158,9 @@ while [[ $# -gt 0 ]]; do
     ;;
   -n | --newscaster)
     NEWSCASTER_STYLE=true
+    ;;
+  -m | --mute)
+    MUTE=true
     ;;
   *)
     TEXT+="$1 "
@@ -237,6 +242,7 @@ if [ ! -f "$MP3_PATH" ]; then
 else
   echo "Audio file already exist (\"$MP3_PATH\")"
 fi
+exit
 echo
 
 function mute_sinks() {
@@ -251,6 +257,10 @@ function unmute_sinks() {
   done
 }
 
+if $MUTE; then
+  ln -s "$MP3_PATH" "/tmp/last_polly.mp3"
+  exit 0
+fi
 mute_sinks
 sleep 0.5
 mplayer -volume 100 "$MP3_PATH"
