@@ -22,6 +22,10 @@ Default region : us-east-1 (Not all regions have polly)
 
 `polly "hello world"`
 
+`polly -v Gregory -l us "hello there"`
+
+`polly -m -v Gregory -l us "don't play that audio, just create the file."`
+
 ### In zshrc or bashrc... (use your own script path of course)
 
 ```
